@@ -19,7 +19,6 @@ const BottomNavigation: React.FC = () => {
 
   const [popup, setPopup] = useState<null | "member" | "hisab">(null);
 
-  // hide saat scroll ke bawah
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
@@ -45,7 +44,6 @@ const BottomNavigation: React.FC = () => {
 
   return (
     <>
-      {/* Bottom Navigation */}
       <div
         className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 
         bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl 
@@ -72,7 +70,6 @@ const BottomNavigation: React.FC = () => {
             </button>
           ))}
 
-          {/* Logout */}
           <button
             onClick={handleLogout}
             className="flex flex-col items-center text-[11px] text-red-500 hover:text-red-700 transition-colors"
@@ -83,7 +80,6 @@ const BottomNavigation: React.FC = () => {
         </div>
       </div>
 
-      {/* Popup Modal */}
       {popup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-80 max-w-sm p-5 relative">
@@ -96,9 +92,7 @@ const BottomNavigation: React.FC = () => {
 
             {popup === "member" && (
               <div className="space-y-3">
-                <h2 className="text-lg font-semibold mb-3 text-center">
-                  Pilih Member
-                </h2>
+                <h2 className="text-lg font-semibold mb-3 text-center">Pilih Member</h2>
                 <button
                   onClick={() => {
                     navigate("/students");
@@ -122,9 +116,7 @@ const BottomNavigation: React.FC = () => {
 
             {popup === "hisab" && (
               <div className="space-y-3">
-                <h2 className="text-lg font-semibold mb-3 text-center">
-                  Pilih Hisab
-                </h2>
+                <h2 className="text-lg font-semibold mb-3 text-center">Pilih Hisab</h2>
                 <button
                   onClick={() => {
                     navigate("/falak");

@@ -21,14 +21,12 @@ const Teachers: React.FC = () => {
       .catch((err) => console.error('Gagal mengambil data guru:', err));
   }, []);
 
-  // Filter guru berdasarkan pencarian
   const filteredTeachers = teachers.filter(teacher =>
     (teacher.name || '').toLowerCase().includes((searchTerm || '').toLowerCase())
   );
 
   return (
     <div className="p-4 space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold text-gray-800">Data Mustahiq</h1>
         {user?.role === 'admin' && (
@@ -42,7 +40,6 @@ const Teachers: React.FC = () => {
         )}
       </div>
 
-      {/* Pencarian */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
@@ -54,7 +51,6 @@ const Teachers: React.FC = () => {
         />
       </div>
 
-      {/* Daftar Guru */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredTeachers.map((teacher) => (
           <div
@@ -77,7 +73,6 @@ const Teachers: React.FC = () => {
         ))}
       </div>
 
-      {/* Jika Tidak Ada Guru */}
       {filteredTeachers.length === 0 && (
         <div className="text-center py-12">
           <GraduationCap size={48} className="text-gray-400 mx-auto mb-4" />

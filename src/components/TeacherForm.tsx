@@ -20,10 +20,9 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ isEdit = false }) => {
     whatsapp: '',
     quotes: '',
     photo: '',
-    catatan: '' // ✅ field baru
+    catatan: ''
   });
 
-  // Ambil data guru saat edit
   useEffect(() => {
     if (isEdit && id) {
       fetch(`http://localhost:3001/api/teachers/${id}`, {
@@ -36,14 +35,13 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ isEdit = false }) => {
           setFormData({
             ...data,
             birthDate: data.birthDate ? data.birthDate.split('T')[0] : '',
-            catatan: data.catatan || '' // ✅ handle data lama yang belum ada catatan
+            catatan: data.catatan || ''
           });
         })
         .catch(err => console.error('Gagal mengambil data guru:', err));
     }
   }, [isEdit, id]);
 
-  // Submit data guru
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -131,7 +129,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ isEdit = false }) => {
           <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} placeholder="WhatsApp" className="input" />
           <textarea name="address" value={formData.address} onChange={handleChange} required placeholder="Alamat lengkap" className="input col-span-2" />
           <textarea name="quotes" value={formData.quotes} onChange={handleChange} placeholder="Quotes" className="input col-span-2" />
-          <textarea name="catatan" value={formData.catatan} onChange={handleChange} placeholder="Catatan tambahan" className="input col-span-2" /> {/* ✅ field baru */}
+          <textarea name="catatan" value={formData.catatan} onChange={handleChange} placeholder="Catatan tambahan" className="input col-span-2" />
         </div>
 
         <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-lg font-medium">

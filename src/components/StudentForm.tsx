@@ -85,7 +85,6 @@ const StudentForm: React.FC<StudentFormProps> = ({ isEdit = false }) => {
     });
   };
 
-  // (Optional) Helper untuk embed google maps
   function getEmbedUrl(url: string): string {
     try {
       const urlObj = new URL(url);
@@ -147,7 +146,6 @@ const StudentForm: React.FC<StudentFormProps> = ({ isEdit = false }) => {
         </button>
       </form>
 
-      {/* Preview */}
       {showPreview && (
         <div className="rounded-xl p-6 mt-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Preview</h3>
@@ -193,7 +191,6 @@ const StudentForm: React.FC<StudentFormProps> = ({ isEdit = false }) => {
                 )}
               </p>
 
-              {/* Optional: Tampilkan embed maps langsung */}
               {formData.mapsUrl && (
                 <div className="w-full my-2 rounded-md overflow-hidden" style={{ height: 200 }}>
                   <iframe

@@ -14,10 +14,9 @@ const Students: React.FC = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Ambil data mahasiswa dari API
     fetch('http://localhost:3001/api/students', {
       headers: {
-        Authorization: 'Bearer secret-token', // Tetap menggunakan token hardcoded
+        Authorization: 'Bearer secret-token',
       },
     })
       .then((res) => res.json())
@@ -39,7 +38,6 @@ const Students: React.FC = () => {
 
   return (
     <div className="p-4 space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold text-gray-800">Data Mahasantri</h1>
         {user?.role === 'admin' && (
@@ -53,7 +51,6 @@ const Students: React.FC = () => {
         )}
       </div>
 
-      {/* Pencarian */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
@@ -65,23 +62,19 @@ const Students: React.FC = () => {
         />
       </div>
 
-      {/* Kategori Mahasantri */}
       <div className="relative">
         <button
           className="w-full p-3 rounded-xl bg-white border border-gray-200 text-sm font-semibold text-gray-700 shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-          onClick={() => setDropdownOpen(!dropdownOpen)} // Toggle dropdown
+          onClick={() => setDropdownOpen(!dropdownOpen)}
         >
           Pilih Kategori Mahasantri
         </button>
 
         {dropdownOpen && (
-          <div
-            className="absolute w-full bg-white border border-gray-200 mt-2 rounded-xl shadow-xl z-10 transition-opacity duration-500 opacity-100" // Animasi fade-in
-          >
-            {/* Tombol Tutup */}
+          <div className="absolute w-full bg-white border border-gray-200 mt-2 rounded-xl shadow-xl z-10 transition-opacity duration-500 opacity-100">
             <div className="flex justify-end p-2">
               <button
-                onClick={() => setDropdownOpen(false)} // Menutup dropdown
+                onClick={() => setDropdownOpen(false)}
                 className="text-sm text-gray-500 hover:text-gray-700 focus:outline-none"
               >
                 Tutup
@@ -119,13 +112,12 @@ const Students: React.FC = () => {
         )}
       </div>
 
-      {/* Daftar Mahasantri */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredStudents.map((student) => {
           const cat = STUDENT_CATEGORIES[student.category as StudentCategory];
           return (
             <div
-              key={student.id} // Pastikan menggunakan key yang unik
+              key={student.id}
               onClick={() => navigate(`/students/${student.id}`)}
               className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1 overflow-hidden max-w-xs"
             >
@@ -148,7 +140,6 @@ const Students: React.FC = () => {
         })}
       </div>
 
-      {/* Jika Tidak Ada Mahasantri */}
       {filteredStudents.length === 0 && (
         <div className="text-center py-12">
           <Users size={48} className="text-gray-400 mx-auto mb-4" />

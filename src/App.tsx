@@ -4,14 +4,9 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import { motion } from 'framer-motion';
 
-// ================= Lazy Load Pages & Layout =================
 const Layout = lazy(() => import('./components/Layout'));
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
-
-// Auth
 const Login = lazy(() => import('./pages/Login'));
-
-// Public pages
 const Home = lazy(() => import('./pages/Home'));
 const Students = lazy(() => import('./pages/Students'));
 const Teachers = lazy(() => import('./pages/Teachers'));
@@ -26,16 +21,12 @@ const Istigosah = lazy(() => import('./pages/Istigosah'));
 const StorePage = lazy(() => import('./pages/StorePage'));
 const ArticlePage = lazy(() => import('./pages/ArticlePage'));
 const FiqihQA = lazy(() => import('./pages/FiqihQA'));
-
-// Admin pages
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const MahasantriManagement = lazy(() => import('./components/UI/MahasantriManagement'));
 const MustahiqManagement = lazy(() => import('./components/UI/MustahiqManagement'));
 const TokoManagement = lazy(() => import('./components/UI/TokoManagement'));
 const VideoManagement = lazy(() => import('./components/UI/VideoManagement'));
 const FiqhQAAdmin = lazy(() => import('./components/UI/FiqhQA'));
-
-// ================= Wrapper Animasi Halaman =================
 const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -47,11 +38,9 @@ const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </motion.div>
 );
 
-// ================= Routes =================
 const AppRoutes: React.FC = () => {
   const { user } = useAuth();
 
-  // kalau belum login
   if (!user) {
     return (
       <Routes>
@@ -63,10 +52,7 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Routes>
-      {/* redirect user login ke home */}
       <Route path="/login" element={<Navigate to="/" replace />} />
-
-      {/* Layout umum (user & admin bisa akses) */}
       <Route path="/" element={<Layout />}>
         <Route index element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="students" element={<PageWrapper><Students /></PageWrapper>} />
@@ -114,7 +100,6 @@ const AppRoutes: React.FC = () => {
         <Route path="fiqih" element={<PageWrapper><FiqihQA /></PageWrapper>} />
       </Route>
 
-      {/* Layout khusus admin */}
       <Route
         path="/admin"
         element={
@@ -131,13 +116,11 @@ const AppRoutes: React.FC = () => {
         <Route path="fiqh" element={<PageWrapper><FiqhQAAdmin /></PageWrapper>} />
       </Route>
 
-      {/* kalau route nggak ketemu */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
 
-// ================= Main App =================
 const App: React.FC = () => (
   <AuthProvider>
     <Router>
