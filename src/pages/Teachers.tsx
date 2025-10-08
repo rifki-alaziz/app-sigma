@@ -1,0 +1,92 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Search, GraduationCap } from 'lucide-react';
+import { Teacher } from '../types';
+import { useAuth } from '../context/AuthContext';
+
+const Teachers: React.FC = () => {
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    fetch('http://localhost:3001/api/teachers', {
+      headers: {
+        Authorization: 'Bearer secret-token',
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => setTeachers(data))
+      .catch((err) => console.error('Gagal mengambil data guru:', err));
+  }, []);
+
+  // Filter guru berdasarkan pencarian
+  const filteredTeachers = teachers.filter(teacher =>
+    (teacher.name || '').toLowerCase().includes((searchTerm || '').toLowerCase())
+  );
+
+  return (
+    <div className="p-4 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold text-gray-800">Data Mustahiq</h1>
+        {user?.role === 'admin' && (
+          <button
+            onClick={() => navigate('/teachers/add')}
+            className="bg-green-600 text-white px-3 py-2 rounded-md flex items-center space-x-2 hover:bg-green-700 transition-colors text-sm"
+          >
+            <Plus size={20} />
+            <span>Tambah</span>
+          </button>
+        )}
+      </div>
+
+      {/* Pencarian */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <input
+          type="text"
+          placeholder="Cari guru..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+        />
+      </div>
+
+      {/* Daftar Guru */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredTeachers.map((teacher) => (
+          <div
+            key={teacher.id}
+            onClick={() => navigate(`/teachers/${teacher.id}`)}
+            className="bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer transform hover:-translate-y-1 overflow-hidden max-w-xs"
+          >
+            <div className="relative">
+              <img
+                src={teacher.photo || 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400'}
+                alt={teacher.name}
+                className="w-full h-32 object-cover rounded-t-md"
+              />
+            </div>
+
+            <div className="p-3">
+              <h3 className="text-base font-semibold text-gray-800 mb-2">{teacher.name}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Jika Tidak Ada Guru */}
+      {filteredTeachers.length === 0 && (
+        <div className="text-center py-12">
+          <GraduationCap size={48} className="text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-600 mb-2">Tidak ada guru ditemukan</h3>
+          <p className="text-gray-500">Coba ubah kata kunci pencarian</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Teachers;
