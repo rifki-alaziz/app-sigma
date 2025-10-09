@@ -17,6 +17,7 @@ const Istigosah = lazy(() => import('./pages/Istigosah'));
 const StorePage = lazy(() => import('./pages/StorePage'));
 const ArticlePage = lazy(() => import('./pages/ArticlePage'));
 const FiqihQA = lazy(() => import('./pages/FiqihQA'));
+const FiqihForm = lazy(() => import('./components/FiqihForm'));
 
 const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <motion.div
@@ -57,6 +58,8 @@ const App: React.FC = () => (
           <Route path="store" element={<PageWrapper><StorePage /></PageWrapper>} />
           <Route path="article/:articleId" element={<PageWrapper><ArticlePage /></PageWrapper>} />
           <Route path="fiqih" element={<PageWrapper><FiqihQA /></PageWrapper>} />
+          <Route path="fiqih/add" element={<PageWrapper><FiqihForm /></PageWrapper>} />
+          <Route path="fiqih/edit/:id" element={<PageWrapper><FiqihForm isEdit /></PageWrapper>} />
         </Route>
       </Routes>
     </Suspense>

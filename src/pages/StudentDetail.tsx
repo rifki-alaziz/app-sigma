@@ -13,22 +13,16 @@ const StudentDetail: React.FC = () => {
   const [overlayVisible, setOverlayVisible] = useState(false); // Untuk overlay transparan
 
   useEffect(() => {
-    // Mock data untuk demo
-    const mockStudent: Student = {
-      id: id || '1',
-      name: 'Ahmad Fauzi',
-      fatherName: 'Abdullah',
-      birthDate: '2000-05-15',
-      address: 'Jl. Masjid No. 123, Jakarta Selatan, DKI Jakarta 12345',
-      category: 'jabodetabek',
-      instagram: 'ahmad_fauzi',
-      whatsapp: '081234567890',
-      quotes: 'Menuntut ilmu adalah kewajiban setiap muslim. Barangsiapa yang menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga.',
-      photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=800',
-      mapsUrl: 'https://maps.google.com/?q=-6.2088,106.8456',
-      createdAt: '2024-01-15T10:30:00Z'
-    };
-    setStudent(mockStudent);
+    if (id) {
+      const savedStudents = localStorage.getItem('students');
+      if (savedStudents) {
+        const students = JSON.parse(savedStudents);
+        const foundStudent = students.find((s: Student) => s.id === id);
+        if (foundStudent) {
+          setStudent(foundStudent);
+        }
+      }
+    }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'PrintScreen') {
@@ -48,8 +42,12 @@ const StudentDetail: React.FC = () => {
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus data Mahasantri ini?')) {
       try {
-        // Mock delete - dalam implementasi nyata akan menghapus dari database
-        console.log('Menghapus data Mahasantri dengan ID:', id);
+        const savedStudents = localStorage.getItem('students');
+        if (savedStudents) {
+          const students = JSON.parse(savedStudents);
+          const updatedStudents = students.filter((s: Student) => s.id !== id);
+          localStorage.setItem('students', JSON.stringify(updatedStudents));
+        }
         navigate('/students');
       } catch (err) {
         alert(err);

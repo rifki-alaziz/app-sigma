@@ -20,29 +20,25 @@ const TeacherDetail: React.FC = () => {
   useEffect(() => {
     if (!id) return;
     
-    // Mock data untuk demo
-    const mockTeacher: Teacher = {
-      id: id,
-      name: 'Ustadz Ahmad Syaiful',
-      fatherName: 'Muhammad',
-      birthDate: '1980-07-12',
-      address: 'Jl. Ulama No. 88, Jakarta Pusat, DKI Jakarta 10110',
-      subject: 'Fiqh & Hadits',
-      instagram: 'ustadz_ahmad',
-      whatsapp: '081234567890',
-      quotes: 'Mengajar adalah ibadah yang mulia. Barangsiapa yang mengajarkan kebaikan, maka dia akan mendapat pahala seperti orang yang mengamalkannya.',
-      photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=800',
-      catatan: 'Spesialis dalam bidang fiqh muamalah dan hadits. Lulusan Universitas Al-Azhar Kairo dengan pengalaman mengajar lebih dari 15 tahun. Aktif dalam berbagai kajian dan seminar keislaman.',
-      createdAt: '2024-01-10T08:00:00Z'
-    };
-    setTeacher(mockTeacher);
+    const savedTeachers = localStorage.getItem('teachers');
+    if (savedTeachers) {
+      const teachers = JSON.parse(savedTeachers);
+      const foundTeacher = teachers.find((t: Teacher) => t.id === id);
+      if (foundTeacher) {
+        setTeacher(foundTeacher);
+      }
+    }
   }, [id]);
 
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus data guru ini?')) {
       try {
-        // Mock delete - dalam implementasi nyata akan menghapus dari database
-        console.log('Menghapus data guru dengan ID:', id);
+        const savedTeachers = localStorage.getItem('teachers');
+        if (savedTeachers) {
+          const teachers = JSON.parse(savedTeachers);
+          const updatedTeachers = teachers.filter((t: Teacher) => t.id !== id);
+          localStorage.setItem('teachers', JSON.stringify(updatedTeachers));
+        }
         navigate('/teachers');
       } catch (err: any) {
         alert(err.message || err);

@@ -9,54 +9,74 @@ const Students: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Mock data untuk demo
-    const mockStudents: Student[] = [
-      {
-        id: '1',
-        name: 'Ahmad Fauzi',
-        fatherName: 'Abdullah',
-        birthDate: '2000-05-15',
-        address: 'Jl. Masjid No. 123, Jakarta',
-        category: 'jabodetabek',
-        instagram: 'ahmad_fauzi',
-        whatsapp: '081234567890',
-        quotes: 'Menuntut ilmu adalah kewajiban setiap muslim',
-        photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
-        createdAt: '2024-01-15T10:30:00Z'
-      },
-      {
-        id: '2',
-        name: 'Muhammad Rizki',
-        fatherName: 'Hasan',
-        birthDate: '1999-08-22',
-        address: 'Jl. Pondok Pesantren No. 45, Bandung',
-        category: 'jawa-barat',
-        instagram: 'rizki_muhammad',
-        whatsapp: '081987654321',
-        quotes: 'Barangsiapa yang menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga',
-        photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
-        createdAt: '2024-01-16T14:20:00Z'
-      },
-      {
-        id: '3',
-        name: 'Ali Akbar',
-        fatherName: 'Omar',
-        birthDate: '2001-03-10',
-        address: 'Jl. Santri No. 67, Yogyakarta',
-        category: 'yogyakarta',
-        instagram: 'ali_akbar',
-        whatsapp: '081122334455',
-        quotes: 'Ilmu adalah cahaya yang menerangi kegelapan',
-        photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
-        createdAt: '2024-01-17T09:15:00Z'
-      }
-    ];
-    setStudents(mockStudents);
+    loadStudents();
   }, []);
 
+  const loadStudents = async () => {
+    try {
+      // Coba ambil dari localStorage dulu
+      const savedStudents = localStorage.getItem('students');
+      if (savedStudents) {
+        setStudents(JSON.parse(savedStudents));
+      } else {
+        // Jika tidak ada, gunakan data default
+        const defaultStudents: Student[] = [
+          {
+            id: '1',
+            name: 'Ahmad Fauzi',
+            fatherName: 'Abdullah',
+            birthDate: '2000-05-15',
+            address: 'Jl. Masjid No. 123, Jakarta',
+            category: 'jabodetabek',
+            instagram: 'ahmad_fauzi',
+            whatsapp: '081234567890',
+            quotes: 'Menuntut ilmu adalah kewajiban setiap muslim',
+            photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
+            mapsUrl: 'https://maps.google.com/?q=-6.2088,106.8456',
+            createdAt: '2024-01-15T10:30:00Z'
+          },
+          {
+            id: '2',
+            name: 'Muhammad Rizki',
+            fatherName: 'Hasan',
+            birthDate: '1999-08-22',
+            address: 'Jl. Pondok Pesantren No. 45, Bandung',
+            category: 'jawa-barat',
+            instagram: 'rizki_muhammad',
+            whatsapp: '081987654321',
+            quotes: 'Barangsiapa yang menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga',
+            photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
+            mapsUrl: 'https://maps.google.com/?q=-6.9175,107.6191',
+            createdAt: '2024-01-16T14:20:00Z'
+          },
+          {
+            id: '3',
+            name: 'Ali Akbar',
+            fatherName: 'Omar',
+            birthDate: '2001-03-10',
+            address: 'Jl. Santri No. 67, Yogyakarta',
+            category: 'yogyakarta',
+            instagram: 'ali_akbar',
+            whatsapp: '081122334455',
+            quotes: 'Ilmu adalah cahaya yang menerangi kegelapan',
+            photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
+            mapsUrl: 'https://maps.google.com/?q=-7.7956,110.3695',
+            createdAt: '2024-01-17T09:15:00Z'
+          }
+        ];
+        setStudents(defaultStudents);
+        localStorage.setItem('students', JSON.stringify(defaultStudents));
+      }
+    } catch (error) {
+      console.error('Error loading students:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const filteredStudents = students.filter((student) => {
     const matchesCategory = selectedCategory === 'all' || student.category === selectedCategory;
     const matchesSearch =
@@ -68,6 +88,17 @@ const Students: React.FC = () => {
   const getCategoryCount = (category: string) => {
     return students.filter((s) => s.category === category).length;
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat data mahasantri...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 space-y-6">

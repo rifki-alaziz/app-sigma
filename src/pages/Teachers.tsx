@@ -6,60 +6,88 @@ import { Teacher } from '../types';
 const Teachers: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Mock data untuk demo
-    const mockTeachers: Teacher[] = [
-      {
-        id: '1',
-        name: 'Ustadz Ahmad Syaiful',
-        fatherName: 'Muhammad',
-        birthDate: '1980-07-12',
-        address: 'Jl. Ulama No. 88, Jakarta',
-        subject: 'Fiqh & Hadits',
-        instagram: 'ustadz_ahmad',
-        whatsapp: '081234567890',
-        quotes: 'Mengajar adalah ibadah yang mulia',
-        photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
-        catatan: 'Spesialis dalam bidang fiqh muamalah dan hadits',
-        createdAt: '2024-01-10T08:00:00Z'
-      },
-      {
-        id: '2',
-        name: 'Ustadzah Fatimah',
-        fatherName: 'Ibrahim',
-        birthDate: '1985-11-25',
-        address: 'Jl. Muslimah No. 45, Bandung',
-        subject: 'Akhlaq & Adab',
-        instagram: 'ustadzah_fatimah',
-        whatsapp: '081987654321',
-        quotes: 'Akhlaq yang baik adalah perhiasan seorang muslimah',
-        photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
-        catatan: 'Ahli dalam pendidikan akhlaq dan adab islami',
-        createdAt: '2024-01-11T10:30:00Z'
-      },
-      {
-        id: '3',
-        name: 'Ustadz Muhammad Rizki',
-        fatherName: 'Ali',
-        birthDate: '1978-04-18',
-        address: 'Jl. Qurra No. 22, Yogyakarta',
-        subject: 'Tajwid & Qiraat',
-        instagram: 'ustadz_rizki',
-        whatsapp: '081122334455',
-        quotes: 'Al-Quran adalah pedoman hidup yang sempurna',
-        photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
-        catatan: 'Hafidz 30 juz dengan sanad qiraat yang kuat',
-        createdAt: '2024-01-12T15:45:00Z'
-      }
-    ];
-    setTeachers(mockTeachers);
+    loadTeachers();
   }, []);
 
+  const loadTeachers = async () => {
+    try {
+      // Coba ambil dari localStorage dulu
+      const savedTeachers = localStorage.getItem('teachers');
+      if (savedTeachers) {
+        setTeachers(JSON.parse(savedTeachers));
+      } else {
+        // Jika tidak ada, gunakan data default
+        const defaultTeachers: Teacher[] = [
+          {
+            id: '1',
+            name: 'Ustadz Ahmad Syaiful',
+            fatherName: 'Muhammad',
+            birthDate: '1980-07-12',
+            address: 'Jl. Ulama No. 88, Jakarta',
+            subject: 'Fiqh & Hadits',
+            instagram: 'ustadz_ahmad',
+            whatsapp: '081234567890',
+            quotes: 'Mengajar adalah ibadah yang mulia',
+            photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+            catatan: 'Spesialis dalam bidang fiqh muamalah dan hadits',
+            createdAt: '2024-01-10T08:00:00Z'
+          },
+          {
+            id: '2',
+            name: 'Ustadzah Fatimah',
+            fatherName: 'Ibrahim',
+            birthDate: '1985-11-25',
+            address: 'Jl. Muslimah No. 45, Bandung',
+            subject: 'Akhlaq & Adab',
+            instagram: 'ustadzah_fatimah',
+            whatsapp: '081987654321',
+            quotes: 'Akhlaq yang baik adalah perhiasan seorang muslimah',
+            photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+            catatan: 'Ahli dalam pendidikan akhlaq dan adab islami',
+            createdAt: '2024-01-11T10:30:00Z'
+          },
+          {
+            id: '3',
+            name: 'Ustadz Muhammad Rizki',
+            fatherName: 'Ali',
+            birthDate: '1978-04-18',
+            address: 'Jl. Qurra No. 22, Yogyakarta',
+            subject: 'Tajwid & Qiraat',
+            instagram: 'ustadz_rizki',
+            whatsapp: '081122334455',
+            quotes: 'Al-Quran adalah pedoman hidup yang sempurna',
+            photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+            catatan: 'Hafidz 30 juz dengan sanad qiraat yang kuat',
+            createdAt: '2024-01-12T15:45:00Z'
+          }
+        ];
+        setTeachers(defaultTeachers);
+        localStorage.setItem('teachers', JSON.stringify(defaultTeachers));
+      }
+    } catch (error) {
+      console.error('Error loading teachers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const filteredTeachers = teachers.filter(teacher =>
     (teacher.name || '').toLowerCase().includes((searchTerm || '').toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat data mustahiq...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 space-y-6">

@@ -49,8 +49,26 @@ const StudentForm: React.FC<StudentFormProps> = ({ isEdit = false }) => {
     e.preventDefault();
 
     try {
-      // Mock save - dalam implementasi nyata akan menyimpan ke database
-      console.log('Menyimpan data mahasiswa:', formData);
+      const savedStudents = localStorage.getItem('students');
+      const students = savedStudents ? JSON.parse(savedStudents) : [];
+      
+      if (isEdit && id) {
+        // Update existing student
+        const updatedStudents = students.map((student: any) =>
+          student.id === id ? { ...student, ...formData } : student
+        );
+        localStorage.setItem('students', JSON.stringify(updatedStudents));
+      } else {
+        // Add new student
+        const newStudent = {
+          id: Date.now().toString(),
+          ...formData,
+          createdAt: new Date().toISOString()
+        };
+        students.push(newStudent);
+        localStorage.setItem('students', JSON.stringify(students));
+      }
+      
       alert(isEdit ? 'Data berhasil diupdate!' : 'Data berhasil disimpan!');
       navigate('/students');
     } catch (err) {

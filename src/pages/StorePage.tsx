@@ -25,92 +25,118 @@ const StorePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("Semua");
   const [sortBy, setSortBy] = useState("name");
+  const [showForm, setShowForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: 0,
+    originalPrice: 0,
+    image: '',
+    category: 'Kitab',
+    stock: 0
+  });
 
   // Data produk
-  const [products] = useState<Product[]>([
-    {
-      id: 1,
-      name: "Mushaf Al-Quran Tajwid Premium",
-      description: "Al-Quran dengan tajwid lengkap, cover kulit asli, ukuran A4",
-      price: 125000,
-      originalPrice: 150000,
-      image: "https://images.pexels.com/photos/1730877/pexels-photo-1730877.jpeg?w=400",
-      category: "Kitab",
-      stock: 45,
-      sold: 89,
-      rating: 4.8,
-      reviews: 67,
-      discount: 17,
-      isBestseller: true
-    },
-    {
-      id: 2,
-      name: "Tasbih Digital Counter LED",
-      description: "Tasbih digital dengan counter otomatis dan lampu LED",
-      price: 85000,
-      image: "https://images.pexels.com/photos/8090196/pexels-photo-8090196.jpeg?w=400",
-      category: "Aksesoris",
-      stock: 23,
-      sold: 156,
-      rating: 4.6,
-      reviews: 89,
-      isNew: true
-    },
-    {
-      id: 3,
-      name: "Sajadah Premium Turki Motif Masjid Nabawi",
-      description: "Sajadah import Turki dengan motif Masjid Nabawi, bahan berkualitas tinggi",
-      price: 275000,
-      originalPrice: 320000,
-      image: "https://images.pexels.com/photos/8142208/pexels-photo-8142208.jpeg?w=400",
-      category: "Sajadah",
-      stock: 12,
-      sold: 67,
-      rating: 4.9,
-      reviews: 45,
-      discount: 14
-    },
-    {
-      id: 4,
-      name: "Buku Hadits Shahih Bukhari Terjemahan",
-      description: "Kumpulan hadits shahih Bukhari dengan terjemahan bahasa Indonesia",
-      price: 95000,
-      image: "https://images.pexels.com/photos/1309240/pexels-photo-1309240.jpeg?w=400",
-      category: "Kitab",
-      stock: 0,
-      sold: 234,
-      rating: 4.7,
-      reviews: 123
-    },
-    {
-      id: 5,
-      name: "Parfum Minyak Wangi Arab Non Alkohol",
-      description: "Parfum minyak wangi khas Arab, tahan lama, halal dan berkualitas",
-      price: 65000,
-      image: "https://images.pexels.com/photos/1961795/pexels-photo-1961795.jpeg?w=400",
-      category: "Parfum",
-      stock: 78,
-      sold: 345,
-      rating: 4.5,
-      reviews: 234,
-      isBestseller: true
-    },
-    {
-      id: 6,
-      name: "Gamis Syari Wanita Polos Elegant",
-      description: "Gamis syari untuk wanita, bahan katun premium, nyaman dipakai",
-      price: 185000,
-      originalPrice: 220000,
-      image: "https://images.pexels.com/photos/9558618/pexels-photo-9558618.jpeg?w=400",
-      category: "Pakaian",
-      stock: 34,
-      sold: 78,
-      rating: 4.4,
-      reviews: 56,
-      discount: 16,
-      isNew: true
+  const [products, setProducts] = useState<Product[]>([]);
+
+  React.useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = () => {
+    const savedProducts = localStorage.getItem('products');
+    if (savedProducts) {
+      setProducts(JSON.parse(savedProducts));
+    } else {
+      const defaultProducts: Product[] = [
+        {
+          id: 1,
+          name: "Mushaf Al-Quran Tajwid Premium",
+          description: "Al-Quran dengan tajwid lengkap, cover kulit asli, ukuran A4",
+          price: 125000,
+          originalPrice: 150000,
+          image: "https://images.pexels.com/photos/1730877/pexels-photo-1730877.jpeg?w=400",
+          category: "Kitab",
+          stock: 45,
+          sold: 89,
+          rating: 4.8,
+          reviews: 67,
+          discount: 17,
+          isBestseller: true
+        },
+        {
+          id: 2,
+          name: "Tasbih Digital Counter LED",
+          description: "Tasbih digital dengan counter otomatis dan lampu LED",
+          price: 85000,
+          image: "https://images.pexels.com/photos/8090196/pexels-photo-8090196.jpeg?w=400",
+          category: "Aksesoris",
+          stock: 23,
+          sold: 156,
+          rating: 4.6,
+          reviews: 89,
+          isNew: true
+        },
+        {
+          id: 3,
+          name: "Sajadah Premium Turki Motif Masjid Nabawi",
+          description: "Sajadah import Turki dengan motif Masjid Nabawi, bahan berkualitas tinggi",
+          price: 275000,
+          originalPrice: 320000,
+          image: "https://images.pexels.com/photos/8142208/pexels-photo-8142208.jpeg?w=400",
+          category: "Sajadah",
+          stock: 12,
+          sold: 67,
+          rating: 4.9,
+          reviews: 45,
+          discount: 14
+        },
+        {
+          id: 4,
+          name: "Buku Hadits Shahih Bukhari Terjemahan",
+          description: "Kumpulan hadits shahih Bukhari dengan terjemahan bahasa Indonesia",
+          price: 95000,
+          image: "https://images.pexels.com/photos/1309240/pexels-photo-1309240.jpeg?w=400",
+          category: "Kitab",
+          stock: 0,
+          sold: 234,
+          rating: 4.7,
+          reviews: 123
+        },
+        {
+          id: 5,
+          name: "Parfum Minyak Wangi Arab Non Alkohol",
+          description: "Parfum minyak wangi khas Arab, tahan lama, halal dan berkualitas",
+          price: 65000,
+          image: "https://images.pexels.com/photos/1961795/pexels-photo-1961795.jpeg?w=400",
+          category: "Parfum",
+          stock: 78,
+          sold: 345,
+          rating: 4.5,
+          reviews: 234,
+          isBestseller: true
+        },
+        {
+          id: 6,
+          name: "Gamis Syari Wanita Polos Elegant",
+          description: "Gamis syari untuk wanita, bahan katun premium, nyaman dipakai",
+          price: 185000,
+          originalPrice: 220000,
+          image: "https://images.pexels.com/photos/9558618/pexels-photo-9558618.jpeg?w=400",
+          category: "Pakaian",
+          stock: 34,
+          sold: 78,
+          rating: 4.4,
+          reviews: 56,
+          discount: 16,
+          isNew: true
+        }
+      ];
+      setProducts(defaultProducts);
+      localStorage.setItem('products', JSON.stringify(defaultProducts));
     }
-  ]);
+  };
 
   const categories = ["Semua", "Kitab", "Sajadah", "Aksesoris", "Parfum", "Pakaian"];
 
@@ -133,9 +159,88 @@ const StorePage: React.FC = () => {
     }
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (editingProduct) {
+      const updatedProducts = products.map(product =>
+        product.id === editingProduct.id ? {
+          ...product,
+          ...formData,
+          discount: formData.originalPrice > 0 ? Math.round(((formData.originalPrice - formData.price) / formData.originalPrice) * 100) : 0,
+          rating: product.rating || 4.5,
+          reviews: product.reviews || 0,
+          sold: product.sold || 0
+        } : product
+      );
+      setProducts(updatedProducts);
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+    } else {
+      const newProduct: Product = {
+        id: Date.now(),
+        ...formData,
+        discount: formData.originalPrice > 0 ? Math.round(((formData.originalPrice - formData.price) / formData.originalPrice) * 100) : 0,
+        rating: 4.5,
+        reviews: 0,
+        sold: 0,
+        isNew: true
+      };
+      const updatedProducts = [...products, newProduct];
+      setProducts(updatedProducts);
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+    }
+    
+    resetForm();
+  };
+
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    setFormData({
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      originalPrice: product.originalPrice || 0,
+      image: product.image,
+      category: product.category,
+      stock: product.stock
+    });
+    setShowForm(true);
+  };
+
+  const handleDelete = (id: number) => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+      const updatedProducts = products.filter(product => product.id !== id);
+      setProducts(updatedProducts);
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      description: '',
+      price: 0,
+      originalPrice: 0,
+      image: '',
+      category: 'Kitab',
+      stock: 0
+    });
+    setEditingProduct(null);
+    setShowForm(false);
+  };
+
   const handleAddToCart = (productId: number) => {
-    alert(`Produk ${productId} ditambahkan ke keranjang!`);
-    navigate("/cart");
+    const product = products.find(p => p.id === productId);
+    if (product && product.stock > 0) {
+      // Update stock
+      const updatedProducts = products.map(p =>
+        p.id === productId ? { ...p, stock: p.stock - 1, sold: p.sold + 1 } : p
+      );
+      setProducts(updatedProducts);
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+      
+      alert(`${product.name} ditambahkan ke keranjang!`);
+    }
   };
 
   const formatRupiah = (number: number) => {
@@ -163,11 +268,100 @@ const StorePage: React.FC = () => {
           </h1>
           <p className="text-gray-600 mt-2">Produk-produk berkualitas untuk kebutuhan ibadah Anda</p>
         </div>
-        <button className="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors flex items-center space-x-2">
+        <button
+          onClick={() => setShowForm(true)}
+          className="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors flex items-center space-x-2"
+        >
           <Plus className="w-4 h-4" />
           <span>Tambah Produk</span>
         </button>
       </div>
+
+      {/* Form Modal */}
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold mb-4">
+              {editingProduct ? 'Edit Produk' : 'Tambah Produk Baru'}
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Nama Produk"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                  required
+                />
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                >
+                  {categories.filter(c => c !== 'Semua').map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  placeholder="Harga"
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: parseInt(e.target.value)})}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                  required
+                />
+                <input
+                  type="number"
+                  placeholder="Harga Asli (opsional)"
+                  value={formData.originalPrice}
+                  onChange={(e) => setFormData({...formData, originalPrice: parseInt(e.target.value)})}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                />
+                <input
+                  type="number"
+                  placeholder="Stok"
+                  value={formData.stock}
+                  onChange={(e) => setFormData({...formData, stock: parseInt(e.target.value)})}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                  required
+                />
+                <input
+                  type="url"
+                  placeholder="URL Gambar"
+                  value={formData.image}
+                  onChange={(e) => setFormData({...formData, image: e.target.value})}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                  required
+                />
+              </div>
+              <textarea
+                placeholder="Deskripsi Produk"
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+                rows={3}
+                required
+              />
+              <div className="flex space-x-2">
+                <button
+                  type="submit"
+                  className="flex-1 bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition-colors"
+                >
+                  {editingProduct ? 'Update' : 'Simpan'}
+                </button>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors"
+                >
+                  Batal
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -275,10 +469,16 @@ const StorePage: React.FC = () => {
                   <button className="bg-white p-1 rounded shadow hover:bg-gray-50">
                     <Eye className="w-4 h-4 text-gray-600" />
                   </button>
-                  <button className="bg-white p-1 rounded shadow hover:bg-gray-50">
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="bg-white p-1 rounded shadow hover:bg-gray-50"
+                  >
                     <Edit className="w-4 h-4 text-blue-600" />
                   </button>
-                  <button className="bg-white p-1 rounded shadow hover:bg-gray-50">
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="bg-white p-1 rounded shadow hover:bg-gray-50"
+                  >
                     <Trash2 className="w-4 h-4 text-red-600" />
                   </button>
                 </div>

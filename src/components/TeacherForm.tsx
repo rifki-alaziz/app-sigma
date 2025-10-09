@@ -55,8 +55,26 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ isEdit = false }) => {
     }
 
     try {
-      // Mock save - dalam implementasi nyata akan menyimpan ke database
-      console.log('Menyimpan data guru:', formData);
+      const savedTeachers = localStorage.getItem('teachers');
+      const teachers = savedTeachers ? JSON.parse(savedTeachers) : [];
+      
+      if (isEdit && id) {
+        // Update existing teacher
+        const updatedTeachers = teachers.map((teacher: any) =>
+          teacher.id === id ? { ...teacher, ...formData } : teacher
+        );
+        localStorage.setItem('teachers', JSON.stringify(updatedTeachers));
+      } else {
+        // Add new teacher
+        const newTeacher = {
+          id: Date.now().toString(),
+          ...formData,
+          createdAt: new Date().toISOString()
+        };
+        teachers.push(newTeacher);
+        localStorage.setItem('teachers', JSON.stringify(teachers));
+      }
+      
       alert(isEdit ? 'Data berhasil diupdate!' : 'Data berhasil disimpan!');
       navigate('/teachers');
     } catch (err: any) {
