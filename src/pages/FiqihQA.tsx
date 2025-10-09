@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Search, BookOpen, Eye, Tag, User, Calendar, MessageSquare } from 'lucide-react';
 import { FiqihQA } from '../types';
 import { FIQIH_CATEGORIES } from '../utils/constants';
-import { useAuth } from '../context/AuthContext';
 
 const FiqihQAPage: React.FC = () => {
   const [questions, setQuestions] = useState<FiqihQA[]>([]);
@@ -12,7 +11,6 @@ const FiqihQAPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   useEffect(() => {
     loadQuestions();
@@ -24,10 +22,6 @@ const FiqihQAPage: React.FC = () => {
 
   const loadQuestions = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await fiqihApi.getAll();
-      // setQuestions(response.data);
-      
       // Fallback data for demo
       const fallbackData: FiqihQA[] = [
         {
@@ -147,15 +141,13 @@ const FiqihQAPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Tanya Jawab Fiqih</h1>
-        {user?.role === 'admin' && (
-          <button
-            onClick={() => navigate('/fiqih/add')}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors"
-          >
-            <Plus size={20} />
-            <span>Tambah Q&A</span>
-          </button>
-        )}
+        <button
+          onClick={() => navigate('/fiqih/add')}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors"
+        >
+          <Plus size={20} />
+          <span>Tambah Q&A</span>
+        </button>
       </div>
 
       <div className="relative">
@@ -244,26 +236,25 @@ const FiqihQAPage: React.FC = () => {
                     <span>{new Date(qa.createdAt).toLocaleDateString('id-ID')}</span>
                   </div>
                   
-                  {user?.role === 'admin' && (
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => navigate(`/fiqih/edit/${qa.id}`)}
-                        className="text-blue-600 hover:text-blue-800 text-sm"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (window.confirm('Hapus Q&A ini?')) {
-                            // Handle delete
-                          }
-                        }}
-                        className="text-red-600 hover:text-red-800 text-sm"
-                      >
-                        Hapus
-                      </button>
-                    </div>
-                  )}
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => navigate(`/fiqih/edit/${qa.id}`)}
+                      className="text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (window.confirm('Hapus Q&A ini?')) {
+                          // Handle delete
+                          console.log('Menghapus Q&A:', qa.id);
+                        }
+                      }}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

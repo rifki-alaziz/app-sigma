@@ -25,20 +25,19 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ isEdit = false }) => {
 
   useEffect(() => {
     if (isEdit && id) {
-      fetch(`http://localhost:3001/api/teachers/${id}`, {
-        headers: {
-          Authorization: 'Bearer secret-token'
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
-          setFormData({
-            ...data,
-            birthDate: data.birthDate ? data.birthDate.split('T')[0] : '',
-            catatan: data.catatan || ''
-          });
-        })
-        .catch(err => console.error('Gagal mengambil data guru:', err));
+      // Mock data untuk edit
+      const mockData = {
+        name: 'Ustadz Ahmad Syaiful',
+        fatherName: 'Muhammad',
+        birthDate: '1980-07-12',
+        address: 'Jl. Ulama No. 88, Jakarta',
+        instagram: 'ustadz_ahmad',
+        whatsapp: '081234567890',
+        quotes: 'Mengajar adalah ibadah yang mulia',
+        photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=800',
+        catatan: 'Spesialis dalam bidang fiqh muamalah dan hadits'
+      };
+      setFormData(mockData);
     }
   }, [isEdit, id]);
 
@@ -55,34 +54,10 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ isEdit = false }) => {
       return;
     }
 
-    const method = isEdit ? 'PUT' : 'POST';
-    const endpoint = isEdit
-      ? `http://localhost:3001/api/teachers/${id}`
-      : `http://localhost:3001/api/teachers`;
-
-    const dataToSend = isEdit
-      ? formData
-      : {
-          id: Date.now().toString(),
-          createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-          ...formData
-        };
-
     try {
-      const res = await fetch(endpoint, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer secret-token'
-        },
-        body: JSON.stringify(dataToSend)
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Gagal menyimpan data guru');
-      }
-
+      // Mock save - dalam implementasi nyata akan menyimpan ke database
+      console.log('Menyimpan data guru:', formData);
+      alert(isEdit ? 'Data berhasil diupdate!' : 'Data berhasil disimpan!');
       navigate('/teachers');
     } catch (err: any) {
       alert(err.message);

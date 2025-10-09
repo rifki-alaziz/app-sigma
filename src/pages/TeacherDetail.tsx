@@ -11,32 +11,38 @@ import {
   StickyNote
 } from 'lucide-react';
 import { Teacher } from '../types';
-import { useAuth } from '../context/AuthContext';
 
 const TeacherDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [teacher, setTeacher] = useState<Teacher | null>(null);
 
   useEffect(() => {
     if (!id) return;
-    fetch(`http://localhost:3001/api/teachers/${id}`, {
-      headers: { Authorization: 'Bearer secret-token' }
-    })
-      .then(res => res.json())
-      .then(data => setTeacher(data.data || data))
-      .catch(err => console.error('Gagal mengambil data guru:', err));
+    
+    // Mock data untuk demo
+    const mockTeacher: Teacher = {
+      id: id,
+      name: 'Ustadz Ahmad Syaiful',
+      fatherName: 'Muhammad',
+      birthDate: '1980-07-12',
+      address: 'Jl. Ulama No. 88, Jakarta Pusat, DKI Jakarta 10110',
+      subject: 'Fiqh & Hadits',
+      instagram: 'ustadz_ahmad',
+      whatsapp: '081234567890',
+      quotes: 'Mengajar adalah ibadah yang mulia. Barangsiapa yang mengajarkan kebaikan, maka dia akan mendapat pahala seperti orang yang mengamalkannya.',
+      photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=800',
+      catatan: 'Spesialis dalam bidang fiqh muamalah dan hadits. Lulusan Universitas Al-Azhar Kairo dengan pengalaman mengajar lebih dari 15 tahun. Aktif dalam berbagai kajian dan seminar keislaman.',
+      createdAt: '2024-01-10T08:00:00Z'
+    };
+    setTeacher(mockTeacher);
   }, [id]);
 
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus data guru ini?')) {
       try {
-        const res = await fetch(`http://localhost:3001/api/teachers/${id}`, {
-          method: 'DELETE',
-          headers: { Authorization: 'Bearer secret-token' }
-        });
-        if (!res.ok) throw new Error('Gagal menghapus data guru');
+        // Mock delete - dalam implementasi nyata akan menghapus dari database
+        console.log('Menghapus data guru dengan ID:', id);
         navigate('/teachers');
       } catch (err: any) {
         alert(err.message || err);
@@ -73,24 +79,22 @@ const TeacherDetail: React.FC = () => {
           <span>Kembali ke Daftar Guru</span>
         </button>
 
-        {user?.role === 'admin' && (
-          <div className="flex space-x-2">
-            <button
-              onClick={() => navigate(`/teachers/edit/${teacher.id}`)}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors"
-            >
-              <Edit size={16} />
-              <span>Edit</span>
-            </button>
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-700 transition-colors"
-            >
-              <Trash2 size={16} />
-              <span>Hapus</span>
-            </button>
-          </div>
-        )}
+        <div className="flex space-x-2">
+          <button
+            onClick={() => navigate(`/teachers/edit/${teacher.id}`)}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors"
+          >
+            <Edit size={16} />
+            <span>Edit</span>
+          </button>
+          <button
+            onClick={handleDelete}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-700 transition-colors"
+          >
+            <Trash2 size={16} />
+            <span>Hapus</span>
+          </button>
+        </div>
       </div>
 
       {/* Teacher Card */}

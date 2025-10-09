@@ -3,27 +3,32 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit, Trash2, Instagram, MessageCircle, MapPin, Calendar, User } from 'lucide-react';
 import { Student, StudentCategory } from '../types';
 import { STUDENT_CATEGORIES } from '../utils/constants';
-import { useAuth } from '../context/AuthContext';
 
 // Helper function for Google Maps embed
 
 const StudentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [student, setStudent] = useState<Student | null>(null);
   const [overlayVisible, setOverlayVisible] = useState(false); // Untuk overlay transparan
 
   useEffect(() => {
-    // Fetch student data
-    fetch(`http://localhost:3001/api/students/${id}`, {
-      headers: {
-        Authorization: 'Bearer secret-token'
-      }
-    })
-      .then(res => res.json())
-      .then(data => setStudent(data))
-      .catch(err => console.error('Gagal mengambil data Mahasantri:', err));
+    // Mock data untuk demo
+    const mockStudent: Student = {
+      id: id || '1',
+      name: 'Ahmad Fauzi',
+      fatherName: 'Abdullah',
+      birthDate: '2000-05-15',
+      address: 'Jl. Masjid No. 123, Jakarta Selatan, DKI Jakarta 12345',
+      category: 'jabodetabek',
+      instagram: 'ahmad_fauzi',
+      whatsapp: '081234567890',
+      quotes: 'Menuntut ilmu adalah kewajiban setiap muslim. Barangsiapa yang menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga.',
+      photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=800',
+      mapsUrl: 'https://maps.google.com/?q=-6.2088,106.8456',
+      createdAt: '2024-01-15T10:30:00Z'
+    };
+    setStudent(mockStudent);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'PrintScreen') {
@@ -43,13 +48,8 @@ const StudentDetail: React.FC = () => {
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus data Mahasantri ini?')) {
       try {
-        const res = await fetch(`http://localhost:3001/api/students/${id}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: 'Bearer secret-token'
-          }
-        });
-        if (!res.ok) throw new Error('Gagal menghapus data Mahasantri');
+        // Mock delete - dalam implementasi nyata akan menghapus dari database
+        console.log('Menghapus data Mahasantri dengan ID:', id);
         navigate('/students');
       } catch (err) {
         alert(err);
@@ -79,24 +79,22 @@ const StudentDetail: React.FC = () => {
           <span>Kembali ke Daftar Mahasantri</span>
         </button>
 
-        {user?.role === 'admin' && (
-          <div className="flex space-x-2">
-            <button
-              onClick={() => navigate(`/students/edit/${student.id}`)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors"
-            >
-              <Edit size={16} />
-              <span>Edit</span>
-            </button>
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-700 transition-colors"
-            >
-              <Trash2 size={16} />
-              <span>Hapus</span>
-            </button>
-          </div>
-        )}
+        <div className="flex space-x-2">
+          <button
+            onClick={() => navigate(`/students/edit/${student.id}`)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700 transition-colors"
+          >
+            <Edit size={16} />
+            <span>Edit</span>
+          </button>
+          <button
+            onClick={handleDelete}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-red-700 transition-colors"
+          >
+            <Trash2 size={16} />
+            <span>Hapus</span>
+          </button>
+        </div>
       </div>
 
       {/* Student Detail Card */}

@@ -38,21 +38,18 @@ const MenuIcons: React.FC = () => {
       icon: BookOpen,
       color: "from-purple-500 to-violet-400",
       path: "/istigosah",
-      comingSoon: true,
     },
     {
       title: "Toko",
       icon: Storefront,
       color: "from-pink-500 to-rose-400",
       path: "/store",
-      comingSoon: true,
     },
     {
       title: "Fiqih Q&A",
       icon: BookOpen,
       color: "from-amber-500 to-yellow-400",
       path: "/fiqih",
-      comingSoon: true,
     },
   ];
 

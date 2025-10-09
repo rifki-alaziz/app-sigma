@@ -2,23 +2,59 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, GraduationCap } from 'lucide-react';
 import { Teacher } from '../types';
-import { useAuth } from '../context/AuthContext';
 
 const Teachers: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/teachers', {
-      headers: {
-        Authorization: 'Bearer secret-token',
+    // Mock data untuk demo
+    const mockTeachers: Teacher[] = [
+      {
+        id: '1',
+        name: 'Ustadz Ahmad Syaiful',
+        fatherName: 'Muhammad',
+        birthDate: '1980-07-12',
+        address: 'Jl. Ulama No. 88, Jakarta',
+        subject: 'Fiqh & Hadits',
+        instagram: 'ustadz_ahmad',
+        whatsapp: '081234567890',
+        quotes: 'Mengajar adalah ibadah yang mulia',
+        photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+        catatan: 'Spesialis dalam bidang fiqh muamalah dan hadits',
+        createdAt: '2024-01-10T08:00:00Z'
+      },
+      {
+        id: '2',
+        name: 'Ustadzah Fatimah',
+        fatherName: 'Ibrahim',
+        birthDate: '1985-11-25',
+        address: 'Jl. Muslimah No. 45, Bandung',
+        subject: 'Akhlaq & Adab',
+        instagram: 'ustadzah_fatimah',
+        whatsapp: '081987654321',
+        quotes: 'Akhlaq yang baik adalah perhiasan seorang muslimah',
+        photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+        catatan: 'Ahli dalam pendidikan akhlaq dan adab islami',
+        createdAt: '2024-01-11T10:30:00Z'
+      },
+      {
+        id: '3',
+        name: 'Ustadz Muhammad Rizki',
+        fatherName: 'Ali',
+        birthDate: '1978-04-18',
+        address: 'Jl. Qurra No. 22, Yogyakarta',
+        subject: 'Tajwid & Qiraat',
+        instagram: 'ustadz_rizki',
+        whatsapp: '081122334455',
+        quotes: 'Al-Quran adalah pedoman hidup yang sempurna',
+        photo: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+        catatan: 'Hafidz 30 juz dengan sanad qiraat yang kuat',
+        createdAt: '2024-01-12T15:45:00Z'
       }
-    })
-      .then((res) => res.json())
-      .then((data) => setTeachers(data))
-      .catch((err) => console.error('Gagal mengambil data guru:', err));
+    ];
+    setTeachers(mockTeachers);
   }, []);
 
   const filteredTeachers = teachers.filter(teacher =>
@@ -29,15 +65,13 @@ const Teachers: React.FC = () => {
     <div className="p-4 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold text-gray-800">Data Mustahiq</h1>
-        {user?.role === 'admin' && (
-          <button
-            onClick={() => navigate('/teachers/add')}
-            className="bg-green-600 text-white px-3 py-2 rounded-md flex items-center space-x-2 hover:bg-green-700 transition-colors text-sm"
-          >
-            <Plus size={20} />
-            <span>Tambah</span>
-          </button>
-        )}
+        <button
+          onClick={() => navigate('/teachers/add')}
+          className="bg-green-600 text-white px-3 py-2 rounded-md flex items-center space-x-2 hover:bg-green-700 transition-colors text-sm"
+        >
+          <Plus size={20} />
+          <span>Tambah</span>
+        </button>
       </div>
 
       <div className="relative">

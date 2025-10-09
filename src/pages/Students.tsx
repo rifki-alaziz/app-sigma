@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Users } from 'lucide-react';
 import { Student, StudentCategory } from '../types';
 import { STUDENT_CATEGORIES } from '../utils/constants';
-import { useAuth } from '../context/AuthContext';
 
 const Students: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
@@ -11,17 +10,51 @@ const Students: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/students', {
-      headers: {
-        Authorization: 'Bearer secret-token',
+    // Mock data untuk demo
+    const mockStudents: Student[] = [
+      {
+        id: '1',
+        name: 'Ahmad Fauzi',
+        fatherName: 'Abdullah',
+        birthDate: '2000-05-15',
+        address: 'Jl. Masjid No. 123, Jakarta',
+        category: 'jabodetabek',
+        instagram: 'ahmad_fauzi',
+        whatsapp: '081234567890',
+        quotes: 'Menuntut ilmu adalah kewajiban setiap muslim',
+        photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
+        createdAt: '2024-01-15T10:30:00Z'
       },
-    })
-      .then((res) => res.json())
-      .then((data) => setStudents(data))
-      .catch((err) => console.error('Gagal mengambil data Mahasantri:', err));
+      {
+        id: '2',
+        name: 'Muhammad Rizki',
+        fatherName: 'Hasan',
+        birthDate: '1999-08-22',
+        address: 'Jl. Pondok Pesantren No. 45, Bandung',
+        category: 'jawa-barat',
+        instagram: 'rizki_muhammad',
+        whatsapp: '081987654321',
+        quotes: 'Barangsiapa yang menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga',
+        photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
+        createdAt: '2024-01-16T14:20:00Z'
+      },
+      {
+        id: '3',
+        name: 'Ali Akbar',
+        fatherName: 'Omar',
+        birthDate: '2001-03-10',
+        address: 'Jl. Santri No. 67, Yogyakarta',
+        category: 'yogyakarta',
+        instagram: 'ali_akbar',
+        whatsapp: '081122334455',
+        quotes: 'Ilmu adalah cahaya yang menerangi kegelapan',
+        photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
+        createdAt: '2024-01-17T09:15:00Z'
+      }
+    ];
+    setStudents(mockStudents);
   }, []);
 
   const filteredStudents = students.filter((student) => {
@@ -40,15 +73,13 @@ const Students: React.FC = () => {
     <div className="p-4 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold text-gray-800">Data Mahasantri</h1>
-        {user?.role === 'admin' && (
-          <button
-            onClick={() => navigate('/students/add')}
-            className="bg-blue-600 text-white px-3 py-2 rounded-full flex items-center space-x-2 hover:bg-blue-700 transition-colors text-sm"
-          >
-            <Plus size={20} />
-            <span>Tambah</span>
-          </button>
-        )}
+        <button
+          onClick={() => navigate('/students/add')}
+          className="bg-blue-600 text-white px-3 py-2 rounded-full flex items-center space-x-2 hover:bg-blue-700 transition-colors text-sm"
+        >
+          <Plus size={20} />
+          <span>Tambah</span>
+        </button>
       </div>
 
       <div className="relative">

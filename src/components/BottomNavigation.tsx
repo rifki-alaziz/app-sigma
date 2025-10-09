@@ -6,15 +6,12 @@ import {
   GraduationCap,
   Compass,
   Calculator,
-  LogOut,
   X,
 } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
 
 const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
   const [visible, setVisible] = useState(true);
 
   const [popup, setPopup] = useState<null | "member" | "hisab">(null);
@@ -36,11 +33,6 @@ const BottomNavigation: React.FC = () => {
     { icon: Compass, label: "Falak", path: "/falak" },
     { icon: Calculator, label: "Hisab", path: "", popup: "hisab" },
   ];
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
     <>
@@ -69,14 +61,6 @@ const BottomNavigation: React.FC = () => {
               <span className="mt-0.5">{label}</span>
             </button>
           ))}
-
-          <button
-            onClick={handleLogout}
-            className="flex flex-col items-center text-[11px] text-red-500 hover:text-red-700 transition-colors"
-          >
-            <LogOut size={22} />
-            <span className="mt-0.5">Keluar</span>
-          </button>
         </div>
       </div>
 

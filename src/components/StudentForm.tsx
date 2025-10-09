@@ -28,50 +28,30 @@ const StudentForm: React.FC<StudentFormProps> = ({ isEdit = false }) => {
 
   useEffect(() => {
     if (isEdit && id) {
-      fetch(`http://localhost:3001/api/students/${id}`, {
-        headers: {
-          Authorization: 'Bearer secret-token'
-        }
-      })
-        .then(res => res.json())
-        .then(data => setFormData({
-          ...data,
-          mapsUrl: data.mapsUrl || '',
-        }))
-        .catch(err => console.error('Gagal mengambil data:', err));
+      // Mock data untuk edit
+      const mockData = {
+        name: 'Ahmad Fauzi',
+        fatherName: 'Abdullah',
+        birthDate: '2000-05-15',
+        address: 'Jl. Masjid No. 123, Jakarta',
+        category: 'jabodetabek' as StudentCategory,
+        instagram: 'ahmad_fauzi',
+        whatsapp: '081234567890',
+        quotes: 'Menuntut ilmu adalah kewajiban setiap muslim',
+        photo: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=800',
+        mapsUrl: 'https://maps.google.com/?q=-6.2088,106.8456',
+      };
+      setFormData(mockData);
     }
   }, [isEdit, id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const method = isEdit ? 'PUT' : 'POST';
-    const endpoint = isEdit
-      ? `http://localhost:3001/api/students/${id}`
-      : `http://localhost:3001/api/students`;
-
-    const dataToSend = isEdit
-      ? formData
-      : {
-          id: Date.now().toString(),
-          createdAt: new Date().toISOString(),
-          ...formData
-        };
-
     try {
-      const res = await fetch(endpoint, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer secret-token'
-        },
-        body: JSON.stringify(dataToSend)
-      });
-
-      if (!res.ok) {
-        throw new Error('Gagal menyimpan data');
-      }
-
+      // Mock save - dalam implementasi nyata akan menyimpan ke database
+      console.log('Menyimpan data mahasiswa:', formData);
+      alert(isEdit ? 'Data berhasil diupdate!' : 'Data berhasil disimpan!');
       navigate('/students');
     } catch (err) {
       alert(err);
