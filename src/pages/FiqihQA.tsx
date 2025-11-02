@@ -111,6 +111,14 @@ const FiqihQAPage: React.FC = () => {
     setFilteredQuestions(filtered);
   };
 
+  const handleDelete = (id: string) => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus Q&A ini?')) {
+      const updatedQuestions = questions.filter(q => q.id !== id);
+      setQuestions(updatedQuestions);
+      localStorage.setItem('fiqihQuestions', JSON.stringify(updatedQuestions));
+    }
+  };
+
   const getCategoryCount = (category: string) => {
     return questions.filter(q => q.category === category && q.isPublished).length;
   };
@@ -239,18 +247,13 @@ const FiqihQAPage: React.FC = () => {
                   <div className="flex space-x-2">
                     <button
                       onClick={() => navigate(`/fiqih/edit/${qa.id}`)}
-                      className="text-blue-600 hover:text-blue-800 text-sm"
+                      className="text-blue-600 hover:text-blue-800 text-sm hover:underline"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => {
-                        if (window.confirm('Hapus Q&A ini?')) {
-                          // Handle delete
-                          console.log('Menghapus Q&A:', qa.id);
-                        }
-                      }}
-                      className="text-red-600 hover:text-red-800 text-sm"
+                      onClick={() => handleDelete(qa.id)}
+                      className="text-red-600 hover:text-red-800 text-sm hover:underline"
                     >
                       Hapus
                     </button>

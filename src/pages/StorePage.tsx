@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Storefront, ShoppingCart, Plus, Search, Filter, Star, Eye, Edit, Trash2 } from "lucide-react";
+import { Store, ShoppingCart, Plus, Search, Filter, Star, Eye, Edit, Trash2 } from "lucide-react";
 
 // Interface untuk produk
 interface Product {
@@ -263,7 +263,7 @@ const StorePage: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-center flex items-center justify-center gap-3">
-            <Storefront size={32} className="text-pink-600" />
+            <Store size={32} className="text-pink-600" />
             Toko Islami
           </h1>
           <p className="text-gray-600 mt-2">Produk-produk berkualitas untuk kebutuhan ibadah Anda</p>
@@ -466,18 +466,33 @@ const StorePage: React.FC = () => {
 
                 {/* Admin Actions */}
                 <div className="absolute top-2 right-2 flex flex-col gap-1">
-                  <button className="bg-white p-1 rounded shadow hover:bg-gray-50">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      alert(`Detail produk: ${product.name}\nStok: ${product.stock}\nTerjual: ${product.sold}`);
+                    }}
+                    className="bg-white p-1 rounded shadow hover:bg-gray-50"
+                    title="Lihat Detail"
+                  >
                     <Eye className="w-4 h-4 text-gray-600" />
                   </button>
                   <button
-                    onClick={() => handleEdit(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(product);
+                    }}
                     className="bg-white p-1 rounded shadow hover:bg-gray-50"
+                    title="Edit Produk"
                   >
                     <Edit className="w-4 h-4 text-blue-600" />
                   </button>
                   <button
-                    onClick={() => handleDelete(product.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(product.id);
+                    }}
                     className="bg-white p-1 rounded shadow hover:bg-gray-50"
+                    title="Hapus Produk"
                   >
                     <Trash2 className="w-4 h-4 text-red-600" />
                   </button>
@@ -528,13 +543,17 @@ const StorePage: React.FC = () => {
 
                 {/* Add to Cart Button */}
                 <button
-                  onClick={() => handleAddToCart(product.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(product.id);
+                  }}
                   disabled={product.stock === 0}
                   className={`w-full py-2 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors ${
                     product.stock === 0
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : "bg-pink-500 text-white hover:bg-pink-600"
                   }`}
+                  title={product.stock === 0 ? "Stok Habis" : "Tambah ke Keranjang"}
                 >
                   <ShoppingCart size={16} />
                   <span>{product.stock === 0 ? "Stok Habis" : "Tambah ke Keranjang"}</span>
@@ -547,7 +566,7 @@ const StorePage: React.FC = () => {
 
       {filteredProducts.length === 0 && (
         <div className="text-center py-12">
-          <Storefront size={48} className="text-gray-400 mx-auto mb-4" />
+          <Store size={48} className="text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-600 mb-2">Tidak ada produk ditemukan</h3>
           <p className="text-gray-500">Coba ubah filter atau kata kunci pencarian</p>
         </div>

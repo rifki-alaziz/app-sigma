@@ -540,26 +540,34 @@ const Library: React.FC = () => {
 
               <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                 <div className="flex space-x-2">
-                  <button className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded">
+                  <button
+                    onClick={() => alert(`Melihat detail: ${kitab.title}`)}
+                    className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded"
+                    title="Lihat Detail"
+                  >
                     <Eye className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleEdit(kitab)}
                     className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded"
+                    title="Edit Kitab"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(kitab.id)}
                     className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded"
+                    title="Hapus Kitab"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
                 
                 {kitab.status === 'available' && (
-                  <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                  <button
                     onClick={() => handleBorrow(kitab.id)}
+                    className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                  >
                     Pinjam
                   </button>
                 )}

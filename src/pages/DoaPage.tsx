@@ -255,13 +255,15 @@ const DoaPage: React.FC = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleEdit(doa)}
-                  className="text-blue-600 hover:text-blue-800 p-1"
+                  className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors"
+                  title="Edit Doa"
                 >
                   <Edit size={16} />
                 </button>
                 <button
                   onClick={() => handleDelete(doa.id)}
-                  className="text-red-600 hover:text-red-800 p-1"
+                  className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors"
+                  title="Hapus Doa"
                 >
                   <Trash2 size={16} />
                 </button>
